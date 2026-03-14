@@ -5,7 +5,9 @@
 // 3. Mark a task as completed
 // 4. Exit the application
 
-List<string> tasks = new List<string>();
+using ToDoList;
+
+List<TaskItem> tasks = new List<TaskItem>();
 Console.WriteLine("To Do List App!");
 
 while (true)
@@ -23,7 +25,12 @@ while (true)
     {
         Console.WriteLine("Enter the task you want to add:");
         string task = Console.ReadLine();
-        tasks.Add(task);
+        TaskItem newTask = new TaskItem 
+        { 
+            Title = task, 
+            IsCompleted = false 
+        };
+        tasks.Add(newTask);
         Console.Clear();
         Console.WriteLine($"Task added! {Environment.NewLine}");
     }
@@ -32,7 +39,8 @@ while (true)
         Console.Clear();
         foreach (var task in tasks)
         {
-            Console.WriteLine(task);
+            string status = task.IsCompleted ? "Completed" : "Pending";
+            Console.WriteLine($"{task.Title} - {status}");
         }
         Console.WriteLine($"{Environment.NewLine}");
     }
@@ -40,16 +48,27 @@ while (true)
     {
         Console.WriteLine("Enter the task you want to mark as completed:");
         string task = Console.ReadLine();
-        if (tasks.Contains(task))
+        if (!string.IsNullOrEmpty(task))
         {
-            tasks.Remove(task);
-            Console.Clear();
-            Console.WriteLine($"Task marked as completed! {Environment.NewLine}");
+            foreach (var t in tasks)
+            {
+                if (t.Title.Equals(task, StringComparison.OrdinalIgnoreCase))
+                {
+                    t.IsCompleted = true;
+                    Console.Clear();
+                    Console.WriteLine($"Task marked as completed! {Environment.NewLine}");
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine($"Task not found! Please try again. {Environment.NewLine}");
+                }
+            }
         }
-        else
+        else 
         {
             Console.Clear();
-            Console.WriteLine($"Task not found! {Environment.NewLine}");
+            Console.WriteLine($"Invalid task! Please try again. {Environment.NewLine}");
         }
     }
     else if (choice=="4")
